@@ -1,4 +1,4 @@
-package sef.module4.activity;
+package erros;
 
 public class Cliente {
 

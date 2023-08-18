@@ -1,23 +1,25 @@
-package sef.module4.activity;
+package erros;
 
+import java.math.BigDecimal;
 import java.util.Date;
+
 import javax.swing.JOptionPane;
 
 public class ContaCorrente {
 
 	private int numero;
 	private Cliente cliente;
-	private float saldo;
+	private BigDecimal saldo;
 	private Date data;
 
-	public ContaCorrente(int numero,Cliente cliente, float saldo, Date data) {
+	public ContaCorrente(int numero, Cliente cliente, BigDecimal saldo, Date data) {
 		this.numero = numero;
 		this.saldo = saldo;
 		this.data = data;
 		this.cliente = cliente;
 	}
-	
-	public float getSaldo() {
+
+	public BigDecimal getSaldo() {
 		return saldo;
 	}
 
@@ -25,43 +27,43 @@ public class ContaCorrente {
 		return cliente;
 	}
 
-	public void Depositar(float valor) {
-		if (valor > 0) {
-			saldo += valor;
+	public void Depositar(BigDecimal valor) throws DepositoInvalidoException {
+		if (valor.compareTo(BigDecimal.ZERO) > 0) {
+			saldo = saldo.add(valor);
 			JOptionPane.showMessageDialog(null, "Depósito de " + valor + " realizado com sucesso. Saldo atual: " + saldo);
 		} else {
-			JOptionPane.showMessageDialog(null, "O valor do depósito deve ser maior que zero.");
+			throw new DepositoInvalidoException("O valor do depósito deve ser maior que zero.");
 		}
 	}
 
-	public void Sacar(float valor) {
-		if (valor > 0 && valor <= saldo) {
-			saldo -= valor;
+	public void Sacar(BigDecimal valor) throws EstouroSaqueException {
+		if (valor.compareTo(BigDecimal.ZERO) > 0 && valor.compareTo(saldo) <= 0) {
+			saldo = saldo.subtract(valor);
 			JOptionPane.showMessageDialog(null, "Saque de " + valor + " realizado com sucesso. Saldo atual: " + saldo);
 		} else {
-			JOptionPane.showMessageDialog(null, "Saldo insuficiente ou valor inválido para saque.");
+			throw new EstouroSaqueException("Saldo insuficiente ou valor inválido para saque.");
 		}
 	}
 
-    public void ExibirExtrato() {
-        StringBuilder extrato = new StringBuilder();
-        extrato.append("Número da conta: ").append(numero).append("\n");
-        extrato.append("Nome do cliente: ").append(cliente.getNome()).append(" ").append(cliente.getSobrenome()).append("\n");
-        extrato.append("CPF do cliente: ").append(cliente.getCpf()).append("\n");
-        extrato.append("Saldo atual: ").append(saldo).append("\n");
-        extrato.append("Data da transação: ").append(data).append("\n");
-        JOptionPane.showMessageDialog(null, extrato.toString());
-    }
+	public void ExibirExtrato() {
+		StringBuilder extrato = new StringBuilder();
+		extrato.append("Número da conta: ").append(numero).append("\n");
+		extrato.append("Nome do cliente: ").append(cliente.getNome()).append(" ").append(cliente.getSobrenome())
+				.append("\n");
+		extrato.append("CPF do cliente: ").append(cliente.getCpf()).append("\n");
+		extrato.append("Saldo atual: ").append(saldo).append("\n");
+		extrato.append("Data da transação: ").append(data).append("\n");
+		JOptionPane.showMessageDialog(null, extrato.toString());
+	}
 
-	public void Transferir(ContaCorrente destino, float valor) {
-		if (valor > 0 && valor <= saldo) {
-			saldo -= valor;
-			destino.saldo += valor;
+	public void Transferir(ContaCorrente destino, BigDecimal valor) throws TransferenciaInvalidaException {
+		if (valor.compareTo(BigDecimal.ZERO) > 0 && valor.compareTo(saldo) <= 0) {
+			saldo = saldo.subtract(valor);
+			destino.saldo = destino.saldo.add(valor);
 			JOptionPane.showMessageDialog(null,
 					"Transferência de " + valor + " para a conta " + destino.numero + " realizada com sucesso. Saldo atual: " + saldo);
 		} else {
-			JOptionPane.showMessageDialog(null, "Saldo insuficiente ou valor inválido para transferência.");
+			throw new TransferenciaInvalidaException("Saldo insuficiente ou valor inválido para transferência.");
 		}
 	}
-	
 }
