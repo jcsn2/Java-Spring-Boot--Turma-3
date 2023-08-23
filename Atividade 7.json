@@ -1,0 +1,169 @@
+1. a) // Sintaxe para criar uma coleção (equivalente a uma tabela) no MongoDB
+db.createCollection("contato");
+
+b) //Inserir mais documentos na coleção "contato"
+[
+  {
+    "nome": "João",
+    "idade": "24",
+    "cidade": "Curitiba",
+    "estado": "Paraná",
+    "telefone": "42-99456-7890"
+  },
+  {
+    "nome": "Maria",
+    "idade": "30",
+    "cidade": "São Paulo",
+    "estado": "São Paulo",
+    "telefone": "11-98765-4321"
+  },
+  {
+    "nome": "Pedro",
+    "idade": "28",
+    "cidade": "Rio de Janeiro",
+    "estado": "Rio de Janeiro",
+    "telefone": "21-87654-1234"
+  },
+  {
+    "nome": "Ana",
+    "idade": "22",
+    "cidade": "Belo Horizonte",
+    "estado": "Minas Gerais",
+    "telefone": "31-76543-2109"
+  },
+  {
+    "nome": "Carlos",
+    "idade": "40",
+    "cidade": "Porto Alegre",
+    "estado": "Rio Grande do Sul",
+    "telefone": "51-67890-5432"
+  },
+  {
+    "nome": "Fernanda",
+    "idade": "27",
+    "cidade": "Recife",
+    "estado": "Pernambuco",
+    "telefone": "81-54321-8765"
+  },
+  {
+    "nome": "Rafael",
+    "idade": "35",
+    "cidade": "Salvador",
+    "estado": "Bahia",
+    "telefone": "71-65432-1098"
+  },
+  {
+    "nome": "Mariana",
+    "idade": "29",
+    "cidade": "Fortaleza",
+    "estado": "Ceará",
+    "telefone": "85-43210-5678"
+  },
+  {
+    "nome": "Diego",
+    "idade": "31",
+    "cidade": "Brasília",
+    "estado": "Distrito Federal",
+    "telefone": "61-76543-2109"
+  },
+  {
+    "nome": "Juliana",
+    "idade": "26",
+    "cidade": "Manaus",
+    "estado": "Amazonas",
+    "telefone": "92-54321-8765"
+  },
+  {
+    "nome": "Gustavo",
+    "idade": "33",
+    "cidade": "Belém",
+    "estado": "Pará",
+    "telefone": "91-65432-1098"
+  },
+  {
+    "nome": "Larissa",
+    "idade": "23",
+    "cidade": "Goiânia",
+    "estado": "Goiás",
+    "telefone": "62-43210-5678"
+  },
+  {
+    "nome": "Ricardo",
+    "idade": "37",
+    "cidade": "Florianópolis",
+    "estado": "Santa Catarina",
+    "telefone": "48-76543-2109"
+  },
+  {
+    "nome": "Camila",
+    "idade": "25",
+    "cidade": "Cuiabá",
+    "estado": "Mato Grosso",
+    "telefone": "65-54321-8765"
+  },
+  {
+    "nome": "Marcelo",
+    "idade": "34",
+    "cidade": "Teresina",
+    "estado": "Piauí",
+    "telefone": "86-65432-1098"
+  }
+]
+
+Resposta - No MongoDB, a estrutura das coleções não é rigidamente definida como nas tabelas dos bancos de dados relacionais. 
+Isso significa que, ao contrário dos bancos de dados relacionais, você pode inserir documentos com campos diferentes em uma mesma coleção, 
+mesmo que esses campos não tenham sido explicitamente definidos durante a criação da coleção.
+
+c) // Item i.
+    db.contato.find({ estado: "São Paulo" })
+
+c) // Item ii.
+    db.contato.find({ idade: { $gt: 18, $lte: 30 } })
+
+c) // Item iii.
+    db.contato.find({ nome: /^Luis/ })
+
+c) // Item iv.
+    db.contato.find({ cidade: "Rio de Janeiro" }).sort({ nome: 1 })
+
+c) // Item v.
+    db.contato.find({ cidade: "Guarapuava" }).sort({ nome: -1 })
+
+c) // Item vi.
+    limit() controla quantos documentos são retornados, enquanto skip() controla quantos documentos são pulados antes de começar a retornar resultados. 
+
+    //Exemplo: Coleção chamada "produtos" com os seguintes documentos. 
+    [
+        { "_id": 1, "nome": "Produto A" },
+        { "_id": 2, "nome": "Produto B" },
+        { "_id": 3, "nome": "Produto C" },
+        { "_id": 4, "nome": "Produto D" },
+        { "_id": 5, "nome": "Produto E" }
+    ]
+
+    Se quisermos buscar apenas os primeiros 3 produtos, usamos somente limit():
+        db.produtos.find().limit(3)
+
+    Se quisermos pular os dois primeiros produtos e retornar o restante, usamos somente skip():
+        db.produtos.find().skip(2)
+
+d) // Atualiza um documentos   
+    db.contato.updateOne(
+        { cidade: "Rio de Janeiro" },
+        { $set: { estado: "Rio de Janeiro" } }
+    )
+
+e) // Apagaga um documento
+    db.contato.deleteOne({ estado: "São Paulo" })
+
+2.  tanto o método save() quanto o insertOne() são usados para inserir documentos em uma coleção, mas eles têm comportamentos um pouco diferente:
+
+    insertOne():
+        O método insertOne() é utilizado para inserir um único documento em uma coleção. Ele recebe como argumento um objeto que representa o documento a ser inserido. 
+        Caso o documento já possua um campo _id, o MongoDB irá verificar se já existe um documento com o mesmo _id na coleção. Se não houver, o documento é inserido 
+        com o _id especificado. Caso contrário, ocorrerá um erro de duplicação de _id.
+    
+    save():
+        O método save() também é usado para inserir documentos, mas ele pode ser usado para inserir um novo documento ou atualizar um documento existente. 
+        Se o documento já possuir um _id e um documento com o mesmo _id existir na coleção, o save() irá substituir o documento existente pelo novo documento. 
+        Se o _id não existir na coleção, o método save() irá inserir o novo documento.
